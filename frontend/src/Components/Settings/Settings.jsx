@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { FaCogs, FaPen } from "react-icons/fa";
 import PageLoader from "../common/PageLoader/PageLoader";
-import {webURL} from "../../constantx.jsx";
+import { webURL } from "../../constantx.jsx";
 
 const Settings = () => {
   const [settings, setSettings] = useState({
@@ -9,16 +9,23 @@ const Settings = () => {
     gpt_key: "Enter Your Open AI Key",
     crm_key: "Enter Your CRM Key",
   });
-  const [loading, setLoading] = useState(true);
-
+  const [loading, setLoading] = useState(true);``
   const fetchSettings = async () => {
     try {
-      const response = await fetch("/api/settings");
+      const user_id = localStorage.getItem('user_id');
+      const response = await fetch(`${webURL}setting/get-setting-value/${user_id}`);
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
-      setSettings(data);
+      if (data) {
+        setSettings((prevSettings) => ({
+          ...prevSettings,
+          gpt_key: data.gpt_key || prevSettings.gpt_key,
+          crm_key: data.crm_key || prevSettings.crm_key,
+          model_name: data.model_name || prevSettings.model_name,
+        }));
+      }
       setLoading(false);
     } catch (error) {
       console.error("There was an error fetching the settings!", error);
@@ -41,17 +48,14 @@ const Settings = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const user_id =localStorage.getItem('user_id')
-      console.log("Data: "+ user_id);
-       const settings_update = {...settings,["user_id"]:user_id}
+      const user_id = localStorage.getItem('user_id');
+      const settings_update = { ...settings, user_id };
 
-
-      const response = await fetch(webURL+"setting/update-values", {
+      const response = await fetch(webURL + "setting/update-values", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        
         body: JSON.stringify(settings_update),
       });
       if (!response.ok) {
@@ -62,13 +66,14 @@ const Settings = () => {
       console.error("There was an error updating the settings!", error);
     }
   };
+
   return (
     <div className="max-w-4xl mx-auto p-8 m-16 bg-white rounded-lg border shadow-lg">
       <h2 className="text-3xl font-semibold mb-8 text-gray-800 flex items-center">
         <FaCogs className="mr-2 text-primary" /> ChatBot Setting
       </h2>
       {loading ? (
-        <PageLoader /> // Render a loading spinner or component while fetching data
+        <PageLoader /> 
       ) : (
         <form
           onSubmit={handleSubmit}
@@ -89,7 +94,7 @@ const Settings = () => {
               />
               <FaPen className="absolute top-3 left-3 text-gray-400" />
             </div>
-          </div>  
+          </div>
           <div className="form-group sm:col-span-2">
             <label htmlFor="gpt_key" className="block text-gray-700">
               OpenAI Key

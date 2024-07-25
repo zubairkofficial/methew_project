@@ -1,11 +1,8 @@
-from urllib import response
-from fastapi_users.password import PasswordHelper
 from passlib.context import CryptContext
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from db import engine, Base, User, ModelDetail, UserToken, get_db
+from db import engine, Base, User, ModelDetail, get_db
 from auth import  generate_random_string
-# from utils import generate_token
 from fastapi.middleware.cors import CORSMiddleware
 import models
 import uvicorn
@@ -50,12 +47,26 @@ def login(user: models.User, db: Session = Depends(get_db)):
     else:
         raise HTTPException(status_code=400, detail="invalid credentials")
 
+@app.get("/setting/get-setting-value/{user_id}")
+def get_setting_value(user_id: str, db:Session =  Depends(get_db)):
+    
+    setting_params = db.query(ModelDetail).filter(ModelDetail.user_id == user_id).first()
+    if setting_params:
+        return {
+            "gpt_key": setting_params.gpt_key,
+            "crm_key": setting_params.crm_key,
+            "model_name": setting_params.model_name
+        }
+    else:
+        return{
+            "error": "Invalid User ID or Data does not exist"
+        }
+
 @app.post("/setting/update-values")
 def set_model_values(
     modelDetail: models.ModelDetailBase, db: Session = Depends(get_db)):
     user_in_db = db.query(ModelDetail).filter(ModelDetail.user_id == modelDetail.user_id).first()
     if user_in_db:
-        print(f"User in DB")
         user_in_db.gpt_key = modelDetail.gpt_key
         user_in_db.crm_key = modelDetail.crm_key
         user_in_db.model_name = modelDetail.model_name
@@ -63,7 +74,6 @@ def set_model_values(
         db.refresh(user_in_db)
         return user_in_db
     else:
-        print("New Data")
         data_model = ModelDetail(
             gpt_key=modelDetail.gpt_key,
             crm_key=modelDetail.crm_key,

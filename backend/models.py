@@ -1,14 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from itsdangerous import URLSafeTimedSerializer
 from fastapi.security import OAuth2PasswordBearer
-import dotenv
 
-
-# import os
-# dotenv.load_dotenv()
-# SECRET_KEY = os.environ['SECRET_KEY']
-# serializer =  URLSafeTimedSerializer(SECRET_KEY)
-# oauth2_schema = OAuth2PasswordBearer(tokenUrl="token")
 class User(BaseModel):
     email: EmailStr
     password: str

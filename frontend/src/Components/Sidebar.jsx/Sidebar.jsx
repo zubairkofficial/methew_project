@@ -21,7 +21,7 @@ const Sidebar = () => {
         <div className="flex items-center justify-center mt-8">
           <div className="flex items-center">
             <span className="mx-2 text-2xl  font-semibold text-white">
-              Mathew
+              Mathew Project
             </span>
           </div>
         </div>
@@ -29,7 +29,7 @@ const Sidebar = () => {
         <nav className="mt-10">
           <Link
             className="flex items-center px-6 py-2 mt-4 text-white hover:bg-gray-700 hover:bg-opacity-25 rounded-md"
-            to="/"
+            to="/user/dashboard"
           >
             <svg
               className="w-6 h-6"

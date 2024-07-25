@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import {webURL} from "../../constantx.jsx";
+import { webURL } from "../../constantx.jsx";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import PageLoader from "../../Components/common/PageLoader/PageLoader";
@@ -10,12 +10,19 @@ const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/user/dashboard');
+    }
+  }, [navigate]);
+
   const LoginSchema = Yup.object().shape({
     email: Yup.string()
-    .email("Invalid email")
-    .min(2, "Too Short!")
-    .max(70, "Too Long!")
-    .required("Required"),
+      .email("Invalid email")
+      .min(2, "Too Short!")
+      .max(70, "Too Long!")
+      .required("Required"),
     password: Yup.string()
       .min(4, "Password must be at least 4 characters")
       .required("Password is required"),
@@ -24,8 +31,6 @@ const Login = () => {
   const handleLogin = async (values) => {
     setLoading(true);
 
-    console.log("testt");
-   
     try {
       const response = await fetch(`${webURL}login`, {
         method: 'POST',
@@ -35,7 +40,6 @@ const Login = () => {
         body: JSON.stringify(values),
       });
       const data = await response.json();
-      console.log(data);
       if (response.ok) {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user_id', data.user.user_id);
@@ -116,12 +120,14 @@ const Login = () => {
                         <ErrorMessage
                           name="password"
                           component="div"
-                          className="text-red-500 text-xs mt-1"/>
+                          className="text-red-500 text-xs mt-1"
+                        />
                       </div>
                       <button
                         type="submit"
                         className="transition duration-200 bg-primary-light hover:bg-primary-light text-white w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
-                        disabled={isSubmitting}>
+                        disabled={isSubmitting}
+                      >
                         Login
                       </button>
                     </Form>

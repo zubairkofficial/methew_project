@@ -30,7 +30,6 @@ const Login = () => {
 
   const handleLogin = async (values) => {
     setLoading(true);
-
     try {
       const response = await fetch(`${webURL}login`, {
         method: 'POST',

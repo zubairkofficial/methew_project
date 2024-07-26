@@ -14,11 +14,11 @@ PORT = get_env("PORT")
 USERNAME = get_env("USERNAME")
 DATABASE_PASSWORD = get_env("DATABASE_PASSWORD")
 
-database_url = f"postgresql://{USERNAME}:{DATABASE_PASSWORD}@localhost:{PORT}/{DATABASE_NAME}"
-engine = create_engine(url=database_url)
+DATABASE_URL = f"postgresql://{USERNAME}:{DATABASE_PASSWORD}@localhost:{PORT}/{DATABASE_NAME}"
+engine = create_engine(url=DATABASE_URL)
 SessionLocal = sessionmaker(autoflush=False, bind=engine)
 Base = declarative_base()
-
+Base.metadata.create_all(bind=engine)
 def get_db():
     """
     Provides a database session to interact with the database.

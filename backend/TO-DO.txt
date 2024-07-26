@@ -1,1 +1,1 @@
-$argon2id$v=19$m=65536,t=3,p=4$t5aS8p4TgnDOGWNMKYXwXg$+OMZpspzouiitIN2E4LdOYnNfi55LxfrgOaf+UFLD/o
+[ ] implement logic to get GPT KEY AND MODEL VALUE from db

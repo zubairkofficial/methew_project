@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr
-
+from typing import Optional
 
 class User(BaseModel):
     """
@@ -34,5 +34,7 @@ class ChatBotMessage(BaseModel):
     """
     Represents a message from a human to a chatbot.
     """
-
     human_message: str
+
+class FileMetadata(BaseModel):
+    file_content: Optional[str] = None

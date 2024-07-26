@@ -66,7 +66,6 @@ const Settings = () => {
       console.error("There was an error updating the settings!", error);
     }
   };
-
   return (
     <div className="max-w-4xl mx-auto p-8 m-16 bg-white rounded-lg border shadow-lg">
       <h2 className="text-3xl font-semibold mb-8 text-gray-800 flex items-center">

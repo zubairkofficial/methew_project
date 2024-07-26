@@ -1,16 +1,15 @@
-from urllib import response
 from passlib.context import CryptContext
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 from db import engine, Base, User, ModelDetail, get_db
 from auth import  generate_token
+from chatbot.langchain_model import langchain_app
 from fastapi.middleware.cors import CORSMiddleware
 import models
 import uvicorn
 
 
 app = FastAPI()
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -18,8 +17,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-Base.metadata.create_all(bind=engine)
-
+app.include_router(langchain_app, prefix="/api")
 
 def hash_password(password: str) -> str:
     """
@@ -100,8 +98,7 @@ def get_setting_value(user_id: str, db: Session = Depends(get_db)):
 
 @app.post("/setting/update-values")
 def set_model_values(
-    modelDetail: models.ModelDetailBase, db: Session = Depends(get_db)
-):
+    modelDetail: models.ModelDetailBase, db: Session = Depends(get_db)):
     """
     Update or create model details for a user.
     Args:

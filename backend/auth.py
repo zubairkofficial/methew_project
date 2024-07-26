@@ -1,14 +1,18 @@
-from sqlalchemy.orm import Session
-import jwt
 from fastapi import Depends, APIRouter, HTTPException
 from fastapi.security import OAuth2PasswordBearer
+from sqlalchemy.orm import Session
+from utils import get_env_variable
 from db import get_db
+import datetime
 import secrets
 import base64
-import os
-from utils import get_env_variable
-import datetime
+import jwt
 
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+router = APIRouter()
+SECRET_KEY = get_env_variable("SECRET_KEY")
+ALGORITHM = get_env_variable("ALGORITHM")
 
 def generate_token(user):
     """
@@ -22,8 +26,7 @@ def generate_token(user):
         - email: The user's email.
         - exp: The current datetime (indicating the expiration time).
     """
-    SECRET_KEY = get_env_variable("SECRET_KEY")
-    ALGORITHM = get_env_variable("ALGORITHM")
+
     payload = {"id": user.id, "email": user.email, "exp": datetime.datetime.now()}
     token = jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
     return token
@@ -40,12 +43,6 @@ def generate_random_string(n: int) -> str:
     random_bytes = secrets.token_bytes(n)
     random_string = base64.urlsafe_b64encode(random_bytes).decode("utf-8")
     return random_string[:n]
-
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-router = APIRouter()
-SECRET_KEY = os.environ["SECRET_KEY"]
-ALGORITHM = os.environ["ALGORITHM"]
 
 
 def get_user_id(

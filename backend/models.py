@@ -1,5 +1,6 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional
+from datetime import datetime
 
 class User(BaseModel):
     """
@@ -35,6 +36,12 @@ class ChatBotMessage(BaseModel):
     Represents a message from a human to a chatbot.
     """
     human_message: str
+    send_by: str
 
 class FileMetadata(BaseModel):
     file_content: Optional[str] = None
+
+class ChatModel(BaseModel):
+    human_message: str
+    chat_id: int
+    date_time: datetime

@@ -9,7 +9,7 @@ const Settings = () => {
     gpt_key: "Enter Your Open AI Key",
     crm_key: "Enter Your CRM Key",
   });
-  const [loading, setLoading] = useState(true);``
+  const [loading, setLoading] = useState(true);
   const fetchSettings = async () => {
     try {
       const user_id = localStorage.getItem('user_id');
@@ -39,10 +39,13 @@ const Settings = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    console.log("e.target in handleChange(): ", e)
+    console.log("e.target in handleChange() with e.target: ", e.target)
     setSettings((prevSettings) => ({
       ...prevSettings,
       [name]: value,
     }));
+
   };
 
   const handleSubmit = async (e) => {

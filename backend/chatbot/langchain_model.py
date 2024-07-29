@@ -45,6 +45,7 @@ async def get_chatbot_response(message: ChatBotMessage):
         embeddings=embeddings,
     )
     response = VECTORSEARCH.similarity_search(query=message.human_message, k=1)
+
     return response
 
 

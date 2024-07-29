@@ -60,3 +60,9 @@ class UserToken(Base):
     id = Column(Integer, nullable=False, unique=True, autoincrement=True, primary_key=True)
     user_id = Column(Integer, ForeignKey("User.id", ondelete="CASCADE"), nullable=False)
     token = Column(String, nullable=False, unique=True)
+
+class ChatMessage(Base):
+    __tablename__ = "ChatMessage"
+    id = Column(Integer, nullable=False, unique=True, autoincrement=True, primary_key=True)
+    send_by = Column(Integer, ForeignKey("User.id", ondelete="CASCADE"), nullable=False)
+    message = Column(String)

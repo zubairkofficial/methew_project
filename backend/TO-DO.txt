@@ -1,1 +1,4 @@
 [ ] implement logic to get GPT KEY AND MODEL VALUE from db
+[ ] chatbot integration from dashboard
+    [ ] generate database table for request response
+[ ] optimize backend to ues token system  from backend
